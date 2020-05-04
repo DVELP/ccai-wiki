@@ -1,0 +1,172 @@
+{
+  "description": "Bot flow for creating a Flex messaging task",
+  "states": [
+    {
+      "name": "Trigger",
+      "type": "trigger",
+      "transitions": [
+        {
+          "next": "airline_api",
+          "event": "incomingMessage"
+        },
+        {
+          "event": "incomingCall"
+        },
+        {
+          "event": "incomingRequest"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 510,
+          "y": -180
+        }
+      }
+    },
+    {
+      "name": "redirect_condition",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "event": "noMatch"
+        },
+        {
+          "next": "airline_api_task",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to true",
+              "arguments": [
+                "{{widgets.airline_api.parsed.redirect_to_studio}}"
+              ],
+              "type": "equal_to",
+              "value": "true"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.airline_api.parsed.redirect_to_studio}}",
+        "offset": {
+          "x": -50,
+          "y": 210
+        }
+      }
+    },
+    {
+      "name": "airline_api",
+      "type": "make-http-request",
+      "transitions": [
+        {
+          "next": "redirect_condition",
+          "event": "success"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -60,
+          "y": -30
+        },
+        "method": "POST",
+        "content_type": "application/x-www-form-urlencoded;charset=utf-8",
+        "parameters": [
+          {
+            "value": "{{trigger.message.AccountSid}}",
+            "key": "AccountSid"
+          },
+          {
+            "value": "{{trigger.message.MessageSid}}",
+            "key": "MessageSid"
+          },
+          {
+            "value": "{{trigger.message.ChannelAttributes.from}}",
+            "key": "From"
+          },
+          {
+            "value": "{{trigger.message.ChannelAttributes.twilioNumber}}",
+            "key": "To"
+          },
+          {
+            "value": "{{trigger.message.EventType}}",
+            "key": "EventType"
+          },
+          {
+            "value": "{{trigger.message.Body}}",
+            "key": "Body"
+          },
+          {
+            "value": "{{trigger.message.ChannelSid}}",
+            "key": "ChannelSid"
+          },
+          {
+            "value": "{{trigger.message.From}}",
+            "key": "MessageFrom"
+          },
+          {
+            "value": "{{trigger.message.ChannelAttributes.channel_type}}",
+            "key": "ChannelType"
+          }
+        ],
+        "url": "https://staging.api.airline.dvelp.co.uk/api/twilio/studio/messages/incoming"
+      }
+    },
+    {
+      "name": "airline_api_task",
+      "type": "make-http-request",
+      "transitions": [
+        {
+          "event": "success"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 1100,
+          "y": 560
+        },
+        "method": "POST",
+        "content_type": "application/x-www-form-urlencoded;charset=utf-8",
+        "parameters": [
+          {
+            "value": "{{trigger.message.AccountSid}}",
+            "key": "AccountSid"
+          },
+          {
+            "value": "{{trigger.message.MessageSid}}",
+            "key": "MessageSid"
+          },
+          {
+            "value": "{{trigger.message.ChannelAttributes.from}}",
+            "key": "From"
+          },
+          {
+            "value": "{{trigger.message.ChannelAttributes.twilioNumber}}",
+            "key": "To"
+          },
+          {
+            "value": "{{trigger.message.EventType}}",
+            "key": "EventType"
+          },
+          {
+            "value": "{{trigger.message.Body}}",
+            "key": "Body"
+          },
+          {
+            "value": "{{trigger.message.ChannelSid}}",
+            "key": "ChannelSid"
+          }
+        ],
+        "url": "https://staging.api.airline.dvelp.co.uk/api/twilio/studio/tasks/messages"
+      }
+    }
+  ],
+  "initial_state": "Trigger",
+  "flags": {
+    "allow_concurrent_calls": true
+  }
+}
