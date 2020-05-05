@@ -1,12 +1,12 @@
 {
-  "description": "Bot flow for creating a Flex messaging task",
+  "description": "Studio Flow for Messaging with Google CCAI",
   "states": [
     {
       "name": "Trigger",
       "type": "trigger",
       "transitions": [
         {
-          "next": "airline_api",
+          "next": "ccai_handoff",
           "event": "incomingMessage"
         },
         {
@@ -31,13 +31,13 @@
           "event": "noMatch"
         },
         {
-          "next": "airline_api_task",
+          "next": "ccai_task",
           "event": "match",
           "conditions": [
             {
               "friendly_name": "If value equal_to true",
               "arguments": [
-                "{{widgets.airline_api.parsed.redirect_to_studio}}"
+                "{{widgets.ccai_handoff.parsed.redirect_to_studio}}"
               ],
               "type": "equal_to",
               "value": "true"
@@ -46,7 +46,7 @@
         }
       ],
       "properties": {
-        "input": "{{widgets.airline_api.parsed.redirect_to_studio}}",
+        "input": "{{widgets.ccai_handoff.parsed.redirect_to_studio}}",
         "offset": {
           "x": -50,
           "y": 210
@@ -54,7 +54,7 @@
       }
     },
     {
-      "name": "airline_api",
+      "name": "ccai_handoff",
       "type": "make-http-request",
       "transitions": [
         {
@@ -110,11 +110,11 @@
             "key": "ChannelType"
           }
         ],
-        "url": "https://staging.api.airline.dvelp.co.uk/api/twilio/studio/messages/incoming"
+        "url": "https://api.airline.dvelp.co.uk/api/twilio/studio/messages/incoming"
       }
     },
     {
-      "name": "airline_api_task",
+      "name": "ccai_task",
       "type": "make-http-request",
       "transitions": [
         {
@@ -161,7 +161,7 @@
             "key": "ChannelSid"
           }
         ],
-        "url": "https://staging.api.airline.dvelp.co.uk/api/twilio/studio/tasks/messages"
+        "url": "https://api.airline.dvelp.co.uk/api/twilio/studio/tasks/messages"
       }
     }
   ],
