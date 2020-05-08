@@ -1,5 +1,5 @@
 {
-  "description": "IVR for creating a Flex voice task",
+  "description": "Studio Flow for Voice with Google CCAI",
   "states": [
     {
       "name": "Trigger",
