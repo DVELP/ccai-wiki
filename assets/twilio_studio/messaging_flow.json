@@ -106,6 +106,10 @@
             "key": "MessageFrom"
           },
           {
+            "value": "{{trigger.message.WebhookType}}",
+            "key": "WebhookType"
+          },
+          {
             "value": "{{trigger.message.ChannelAttributes.channel_type}}",
             "key": "ChannelType"
           }
@@ -155,6 +159,10 @@
           {
             "value": "{{trigger.message.Body}}",
             "key": "Body"
+          },
+          {
+            "value": "{\"custom_key\":\"value\",\"message_body\":\"{{trigger.message.Body}}\"}",
+            "key": "TaskAttributes"
           },
           {
             "value": "{{trigger.message.ChannelSid}}",
