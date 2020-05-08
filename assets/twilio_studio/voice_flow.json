@@ -1,0 +1,80 @@
+{
+  "description": "IVR for creating a Flex voice task",
+  "states": [
+    {
+      "name": "Trigger",
+      "type": "trigger",
+      "transitions": [
+        {
+          "event": "incomingMessage"
+        },
+        {
+          "next": "ccai_handoff",
+          "event": "incomingCall"
+        },
+        {
+          "event": "incomingRequest"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -60,
+          "y": 40
+        }
+      }
+    },
+    {
+      "name": "ccai_handoff",
+      "type": "add-twiml-redirect",
+      "transitions": [
+        {
+          "next": "ccai_task",
+          "event": "return"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -450,
+          "y": 290
+        },
+        "method": "POST",
+        "url": "https://api.airline.dvelp.co.uk/api/twilio/studio/voice/incoming",
+        "timeout": "14400"
+      }
+    },
+    {
+      "name": "ccai_task",
+      "type": "add-twiml-redirect",
+      "transitions": [
+        {
+          "event": "return"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -590,
+          "y": 590
+        },
+        "method": "POST",
+        "url": "https://api.airline.dvelp.co.uk/api/twilio/studio/tasks/voice",
+        "timeout": "14400"
+      }
+    }
+  ],
+  "initial_state": "Trigger",
+  "flags": {
+    "allow_concurrent_calls": true
+  }
+}
